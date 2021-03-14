@@ -1,0 +1,1 @@
+https://scripture.api.bible/livedocs#/Verses/getVerse
