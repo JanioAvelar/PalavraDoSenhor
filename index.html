@@ -44,6 +44,46 @@
             <q>A vingança nunca é plena, mata a alma e a envenena</q>
             <h2>Madruga, Seu</h2>
         </article>
+		
+		<script>
+
+			let bibleApi = 'https://api.scripture.api.bible'
+
+			let credentials = 'f0ad4f6e484ff80d68dbb34ba7a78369';
+			let brasilianBible = {id:'90799bb5b996fddc-01', language:"por"}
+			
+			let numberOfBook = 27;
+			
+			///v1​/bibles​/{bibleId}​/books​/{bookId}​/chapters -->
+
+			// /v1/bibles/{bibleId}/verses/{verseId} -->
+			
+			let request = 'https://api.scripture.api.bible/v1​/bibles​'
+			
+			console.log(request)
+			
+			fetch(request, {method:"get", headers:{"api-key": credentials}})
+										.then((e)=>{return e.json()})
+										.then((e)=>{console.log(e.data)})
+				
+			/*
+			async function getChapter(request, credentials){
+			
+				console.log(request)
+			
+				const response = await fetch(request,{method:"get",headers:{"api-key": credentials}})
+										.then((e)=>{return e.json()})
+				
+				console.log(response.data);
+			
+			
+			
+			}
+			
+			getChapter(request, credentials)
+			*/
+			
+		</script>
     </main>
 </body>
 </html>
