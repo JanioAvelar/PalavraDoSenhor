@@ -49,15 +49,17 @@
 
 			let credentials = 'bfd88eb83c898b79dfdbabe7bd4eafc4';
 			let brasilianBible = {id:'90799bb5b996fddc-01', language:'por'}
-						
-			///v1​/bibles​/{bibleId}​/books​/{bookId}​/chapters -->
-            //https://api.scripture.api.bible/v1/bibles/90799bb5b996fddc-01/chapters/1CO.2/verses
-            			// /v1/bibles/{bibleId}/verses/{verseId} -->
 
             async function makeRequest(url){
+
                 let results = {}
-                await fetch(url,
-                {method:"get", headers:{"api-key": credentials}})
+
+                let config = {
+                    method:"get", 
+                    headers:{"api-key": credentials}
+                }
+
+                await fetch(url,config)
                 .then((e)=>{return e.json()})
                 .then((e)=>{results = e.data})
 
@@ -79,7 +81,6 @@
                 let number = Math.floor((max) * Math.random());
                 return number
             }
-
 
             async function getRandomVerse(){
                 
@@ -104,8 +105,6 @@
             }
 
             getRandomVerse()
-
-            
 			
 		</script>
     </main>
