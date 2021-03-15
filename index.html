@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palavra do Senhor</title>
     <style>
@@ -15,6 +14,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             width: 100vw;
             height: 100vh;
             background-color: lightcoral;
@@ -26,9 +26,8 @@
             width: 80vw;
         }
 
-        article q{
-            align-self: center;
-            font-size: 3em;
+        article p{
+            font-size: 2em;
         }
 
         article h2{
@@ -40,48 +39,73 @@
 </head>
 <body>
     <main>
-        <article>
-            <q>A vingança nunca é plena, mata a alma e a envenena</q>
-            <h2>Madruga, Seu</h2>
+        <article id="container">
+
         </article>
 		
 		<script>
 
-			let bibleApi = 'https://api.scripture.api.bible'
+			const bibleApi = 'https://api.scripture.api.bible'
 
-			let credentials = 'f0ad4f6e484ff80d68dbb34ba7a78369';
-			let brasilianBible = {id:'90799bb5b996fddc-01', language:"por"}
-			
-			let numberOfBook = 27;
-			
+			let credentials = 'bfd88eb83c898b79dfdbabe7bd4eafc4';
+			let brasilianBible = {id:'90799bb5b996fddc-01', language:'por'}
+						
 			///v1​/bibles​/{bibleId}​/books​/{bookId}​/chapters -->
+            //https://api.scripture.api.bible/v1/bibles/90799bb5b996fddc-01/chapters/1CO.2/verses
+            			// /v1/bibles/{bibleId}/verses/{verseId} -->
 
-			// /v1/bibles/{bibleId}/verses/{verseId} -->
-			
-			let request = 'https://api.scripture.api.bible/v1​/bibles​'
-			
-			console.log(request)
-			
-			fetch(request, {method:"get", headers:{"api-key": credentials}})
-										.then((e)=>{return e.json()})
-										.then((e)=>{console.log(e.data)})
-				
-			/*
-			async function getChapter(request, credentials){
-			
-				console.log(request)
-			
-				const response = await fetch(request,{method:"get",headers:{"api-key": credentials}})
-										.then((e)=>{return e.json()})
-				
-				console.log(response.data);
-			
-			
-			
-			}
-			
-			getChapter(request, credentials)
-			*/
+            async function makeRequest(url){
+                let results = {}
+                await fetch(url,
+                {method:"get", headers:{"api-key": credentials}})
+                .then((e)=>{return e.json()})
+                .then((e)=>{results = e.data})
+
+                let result = results[randomNumberGenerator(results.length)]
+
+                return result
+            }
+        
+            function MakeVerse(content,reference){
+                return `${content}<h2>${reference}</h2>`
+            }
+            
+            function ShowVerse(content,reference){
+                let container = document.getElementById('container')
+                container.insertAdjacentHTML('afterbegin', MakeVerse(content,reference))
+            }
+            
+            function randomNumberGenerator(max){
+                let number = Math.floor((max) * Math.random());
+                return number
+            }
+
+
+            async function getRandomVerse(){
+                
+                let bookRequest = `${bibleApi}/v1/bibles/${brasilianBible.id}/books`
+                let book = await makeRequest(bookRequest)
+                
+                let chaptersRequest = `${bibleApi}/v1/bibles/${brasilianBible.id}/books/${book.id}/chapters`
+                let chapter = await makeRequest(chaptersRequest)
+
+                let versesRequest = `${bibleApi}/v1/bibles/${brasilianBible.id}/chapters/${chapter.id}/verses`
+                let verse = await makeRequest(versesRequest)
+
+                let specificVerseRequest = `${bibleApi}/v1/bibles/${brasilianBible.id}/verses/${verse.id}`
+                
+                let specificVerse = {}
+                await fetch(specificVerseRequest,
+                {method:"get", headers:{"api-key": credentials}})
+                .then((e)=>{return e.json()})
+                .then((e)=>{specificVerse = e.data})
+                
+                ShowVerse(specificVerse.content ,verse.reference)
+            }
+
+            getRandomVerse()
+
+            
 			
 		</script>
     </main>
